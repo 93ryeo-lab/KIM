@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도시어부의 낚시 일기 & 포트폴리오</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                    },
+                    colors: {
+                        ocean: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0ea5e9;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0369a1;
+        }
+        
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen selection:bg-ocean-500 selection:text-white">
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 text-white transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg">
+                        <i class="fa-solid font-bold fa-fish-fins text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 to-blue-300 bg-clip-text text-transparent">SeaAngler</span>
+                        <span class="text-xs text-slate-400 block -mt-1 font-medium">루어 & 바다 낚시 노트</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                    <a href="#about" class="text-slate-300 hover:text-cyan-400 transition-colors py-2"><i class="fa-solid fa-user-ninja mr-1.5"></i>프로필</a>
+                    <a href="#logs" class="text-slate-300 hover:text-cyan-400 transition-colors py-2"><i class="fa-solid fa-book-bookmark mr-1.5"></i>조행기</a>
+                    <a href="#tackle" class="text-slate-300 hover:text-cyan-400 transition-colors py-2"><i class="fa-solid fa-toolbox mr-1.5"></i>장비 태클박스</a>
+                    <a href="#spots" class="text-slate-300 hover:text-cyan-400 transition-colors py-2"><i class="fa-solid fa-map-location-dot mr-1.5"></i>추천 포인트</a>
+                </nav>
+
+                <!-- Action Button -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <button onclick="openModal()" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold px-4 py-2 rounded-xl text-sm shadow-md transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0">
+                        <i class="fa-solid fa-plus mr-1.5"></i>새 조과 기록
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-300 hover:text-white p-2 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-4 space-y-2">
+            <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800"><i class="fa-solid fa-user-ninja w-6"></i>프로필</a>
+            <a href="#logs" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800"><i class="fa-solid fa-book-bookmark w-6"></i>조행기</a>
+            <a href="#tackle" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800"><i class="fa-solid fa-toolbox w-6"></i>장비 태클박스</a>
+            <a href="#spots" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800"><i class="fa-solid fa-map-location-dot w-6"></i>추천 포인트</a>
+            <button onclick="openModal(); toggleMobileMenu();" class="w-full mt-2 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold px-4 py-2 rounded-xl text-sm shadow-md">
+                <i class="fa-solid fa-plus mr-1.5"></i>새 조과 기록하기
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative bg-slate-900 text-white py-24 md:py-32 overflow-hidden">
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0 z-0 opacity-40 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent z-0"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-12">
+            <div class="max-w-2xl">
+                <div class="inline-flex items-center space-x-2 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-6 backdrop-blur-md">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                    <span>시즌 2026 출조 진행 중</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight mb-6">
+                    파도 소리와 함께하는<br/>
+                    <span class="bg-gradient-to-r from-cyan-400 via-teal-300 to-sky-400 bg-clip-text text-transparent">어부의 라이프스타일</span>
+                </h1>
+                <p class="text-slate-300 text-base sm:text-lg leading-relaxed mb-8">
+                    바다와 민물을 넘나들며 느꼈던 전율의 순간을 기록합니다. 물때 정보부터 손맛 가득했던 런커의 기록까지, 저의 낚시 여정을 확인해보세요.
+                </p>
+                <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                    <a href="#logs" class="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-bold px-6 py-3.5 rounded-xl text-sm shadow-lg shadow-cyan-500/30 transition duration-200">
+                        조행기 구경하기 <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                    <a href="#spots" class="bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-semibold px-6 py-3.5 rounded-xl text-sm border border-slate-700 backdrop-blur-md transition duration-200">
+                        비밀 포인트 보기
+                    </a>
+                </div>
+            </div>
+
+            <!-- Weather & Tide Widget Card -->
+            <div class="w-full md:w-80 bg-slate-800/80 backdrop-blur-md border border-slate-700 rounded-2xl p-6 shadow-2xl text-left">
+                <div class="flex justify-between items-center pb-4 mb-4 border-b border-slate-700/80">
+                    <div>
+                        <h3 class="font-bold text-white text-base">오늘의 바다 물때</h3>
+                        <p class="text-xs text-slate-400" id="current-date">2026년 10월 14일 (수)</p>
+                    </div>
+                    <span class="bg-blue-500/20 text-blue-400 text-xs font-semibold px-2.5 py-1 rounded-md border border-blue-500/30">7물 (사리)</span>
+                </div>
+                <div class="space-y-3.5 text-sm">
+                    <div class="flex justify-between items-center text-slate-300">
+                        <span class="flex items-center"><i class="fa-solid fa-location-dot w-5 text-cyan-400"></i> 주요 포인트</span>
+                        <span class="font-semibold text-white">충남 안흥항</span>
+                    </div>
+                    <div class="flex justify-between items-center text-slate-300">
+                        <span class="flex items-center"><i class="fa-solid fa-temperature-half w-5 text-rose-400"></i> 평균 수온</span>
+                        <span class="font-semibold text-white">19.2 ℃</span>
+                    </div>
+                    <div class="flex justify-between items-center text-slate-300">
+                        <span class="flex items-center"><i class="fa-solid fa-wind w-5 text-teal-400"></i> 풍향/풍속</span>
+                        <span class="font-semibold text-white">북서 3.5 m/s</span>
+                    </div>
+                    <div class="flex justify-between items-center text-slate-300">
+                        <span class="flex items-center"><i class="fa-solid fa-water w-5 text-sky-400"></i> 만조/간조</span>
+                        <span class="font-semibold text-xs text-cyan-300">05:20 ▲ / 11:45 ▼</span>
+                    </div>
+                </div>
+                <div class="mt-5 pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs text-slate-400">
+                    <span>출조 지수: <strong class="text-emerald-400">매우 좋음 (A+)</strong></span>
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile Section -->
+    <section id="about" class="py-16 bg-white border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative">
+                        <!-- Profile Image -->
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80" alt="프로필 사진" class="w-72 h-72 sm:w-80 sm:h-80 object-cover rounded-3xl shadow-xl border-4 border-white ring-1 ring-slate-200">
+                        <!-- Badge Overlay -->
+                        <div class="absolute -bottom-4 -right-4 bg-slate-900 text-white p-4 rounded-2xl shadow-lg border border-slate-700 flex items-center space-x-3">
+                            <i class="fa-solid fa-trophy text-amber-400 text-2xl"></i>
+                            <div>
+                                <div class="text-xs text-slate-400">최대어 기록 (PB)</div>
+                                <div class="text-lg font-bold text-cyan-300">농어 84cm</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 space-y-6">
+                    <div>
+                        <span class="text-cyan-600 font-bold text-sm tracking-wider uppercase">Angler Profile</span>
+                        <h2 class="text-3xl font-extrabold text-slate-900 mt-1">안녕하세요, 바다를 사랑하는 낚시꾼입니다.</h2>
+                    </div>
+                    <p class="text-slate-600 leading-relaxed text-base">
+                        낚시 경력 8년 차, 주 종목은 서해안 루어낚시 및 선상 낚시입니다. 
+                        주말마다 채비를 챙겨 탁 트인 바다로 떠나는 것을 가장 큰 즐거움으로 삼고 있습니다. 
+                        자연을 존중하며 Catch & Release 철학을 실천하고 있습니다.
+                    </p>
+
+                    <!-- Stats Badges -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                            <span class="block text-2xl font-black text-cyan-600">8년+</span>
+                            <span class="text-xs font-medium text-slate-500">낚시 구력</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                            <span class="block text-2xl font-black text-cyan-600">140회+</span>
+                            <span class="text-xs font-medium text-slate-500">총 출조 횟수</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                            <span class="block text-2xl font-black text-cyan-600">18종</span>
+                            <span class="text-xs font-medium text-slate-500">Target Species</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                            <span class="block text-2xl font-black text-cyan-600">84 cm</span>
+                            <span class="text-xs font-medium text-slate-500">개인 최대어</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Fishing Logs Section -->
+    <section id="logs" class="py-16 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header & Filter -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                <div>
+                    <span class="text-cyan-600 font-bold text-sm tracking-wider uppercase">Catch & Log</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900 mt-1">최근 조행기</h2>
+                    <p class="text-slate-500 text-sm mt-1">최근 출조해서 낚아 올린 조과 생생한 기록입니다.</p>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="flex flex-wrap gap-2" id="filter-tabs">
+                    <button onclick="filterLogs('all')" class="filter-btn active bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-semibold transition">전체보기</button>
+                    <button onclick="filterLogs('농어')" class="filter-btn bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 px-4 py-2 rounded-xl text-xs font-semibold transition">농어</button>
+                    <button onclick="filterLogs('광어')" class="filter-btn bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 px-4 py-2 rounded-xl text-xs font-semibold transition">광어/우럭</button>
+                    <button onclick="filterLogs('쭈꾸미')" class="filter-btn bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 px-4 py-2 rounded-xl text-xs font-semibold transition">두족류(쭈/갑)</button>
+                </div>
+            </div>
+
+            <!-- Log Cards Container -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="logs-container">
+                <!-- Cards will be populated by Javascript -->
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Gear & Tackle Box Section -->
+    <section id="tackle" class="py-16 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-cyan-600 font-bold text-sm tracking-wider uppercase">My Equipment</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-1">마이 태클박스</h2>
+                <p class="text-slate-500 text-sm mt-1">실전에서 검증된 주력 로드 및 릴 세팅입니다.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Gear Item 1 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-cyan-100 text-cyan-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-water"></i>
+                    </div>
+                    <span class="text-xs font-semibold text-cyan-600 bg-cyan-50 px-2.5 py-1 rounded-md border border-cyan-100">농어/플랫 전용</span>
+                    <h3 class="text-lg font-bold text-slate-900 mt-3">시마노 디얼루나 S96M</h3>
+                    <p class="text-xs text-slate-500 mt-1">릴: 시마노 트윈파워 C3000XG</p>
+                    <hr class="my-4 border-slate-200">
+                    <ul class="text-xs text-slate-600 space-y-2">
+                        <li><strong>합사 라인:</strong> 8합사 1.2호</li>
+                        <li><strong>쇼크리더:</strong> 카본 16lb</li>
+                        <li><strong>주요 미끼:</strong> 미노우 (120mm), 바이브레이션</li>
+                    </ul>
+                </div>
+
+                <!-- Gear Item 2 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-ship"></i>
+                    </div>
+                    <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100">선상 다운샷 전용</span>
+                    <h3 class="text-lg font-bold text-slate-900 mt-3">JS컴퍼니 참에어 C632</h3>
+                    <p class="text-xs text-slate-500 mt-1">릴: 다이와 염월 CT 150PG</p>
+                    <hr class="my-4 border-slate-200">
+                    <ul class="text-xs text-slate-600 space-y-2">
+                        <li><strong>합사 라인:</strong> 8합사 1.0호</li>
+                        <li><strong>쇼크리더:</strong> 카본 12lb</li>
+                        <li><strong>주요 미끼:</strong> 웜 (스트레이트 4인치), 다운샷 봉돌 20-30호</li>
+                    </ul>
+                </div>
+
+                <!-- Gear Item 3 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-shrimp"></i>
+                    </div>
+                    <span class="text-xs font-semibold text-teal-600 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-100">쭈갑 에깅 전용</span>
+                    <h3 class="text-lg font-bold text-slate-900 mt-3">바나나몰 극예 타코이카</h3>
+                    <p class="text-xs text-slate-500 mt-1">릴: 시마노 바르케타 F custom 150</p>
+                    <hr class="my-4 border-slate-200">
+                    <ul class="text-xs text-slate-600 space-y-2">
+                        <li><strong>합사 라인:</strong> 8합사 0.8호</li>
+                        <li><strong>쇼크리더:</strong> 카본 10lb</li>
+                        <li><strong>주요 미끼:</strong> 레이저 에기, 수중 봉돌 10-14호</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Favorite Spots Section -->
+    <section id="spots" class="py-16 bg-slate-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
+                <div>
+                    <span class="text-cyan-400 font-bold text-sm tracking-wider uppercase">Secret Spots</span>
+                    <h2 class="text-3xl font-extrabold text-white mt-1">추천 낚시 포인트</h2>
+                    <p class="text-slate-400 text-sm mt-1">직접 발품 팔아 확인한 알짜배기 필드 정보입니다.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Spot 1 -->
+                <div class="bg-slate-800/90 rounded-2xl p-6 border border-slate-700/80 hover:border-cyan-500/50 transition">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">태안 안흥항 갯바위</h3>
+                            <span class="text-xs text-slate-400"><i class="fa-solid fa-location-dot mr-1"></i>충남 태안군 근흥면</span>
+                        </div>
+                        <span class="bg-emerald-500/20 text-emerald-300 text-xs px-2.5 py-1 rounded-full font-medium border border-emerald-500/30">입질 활발</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                        사리 물때 간조 타임에 진입 가능한 갯바위 포인트. 미노우 호응도가 높으며 60cm 이상 농어 타겟 가능.
+                    </p>
+                    <div class="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-700/60">
+                        <span>주요 어종: <strong>농어, 우럭</strong></span>
+                        <span>추천물때: <strong>4물 ~ 9물</strong></span>
+                    </div>
+                </div>
+
+                <!-- Spot 2 -->
+                <div class="bg-slate-800/90 rounded-2xl p-6 border border-slate-700/80 hover:border-cyan-500/50 transition">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">보령 오천항 슬로프</h3>
+                            <span class="text-xs text-slate-400"><i class="fa-solid fa-location-dot mr-1"></i>충남 보령시 오천면</span>
+                        </div>
+                        <span class="bg-blue-500/20 text-blue-300 text-xs px-2.5 py-1 rounded-full font-medium border border-blue-500/30">가을 핫스팟</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                        가을철 쭈꾸미 및 갑오징어 선상 낚시의 성지. 조류 흐름이 양호하며 물돌이 시기에 확실한 조과 보장.
+                    </p>
+                    <div class="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-700/60">
+                        <span>주요 어종: <strong>갑오징어, 쭈꾸미</strong></span>
+                        <span>추천물때: 1물 ~ 3물</span>
+                    </div>
+                </div>
+
+                <!-- Spot 3 -->
+                <div class="bg-slate-800/90 rounded-2xl p-6 border border-slate-700/80 hover:border-cyan-500/50 transition">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">서산 대산 독곶리 방파제</h3>
+                            <span class="text-xs text-slate-400"><i class="fa-solid fa-location-dot mr-1"></i>충남 서산시 대산읍</span>
+                        </div>
+                        <span class="bg-amber-500/20 text-amber-300 text-xs px-2.5 py-1 rounded-full font-medium border border-amber-500/30">생활 낚시</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                        발판이 편안해 워킹 낚시에 최적화된 곳. 야간 우럭 및 삼치 루어에 반응이 매우 좋은 편입니다.
+                    </p>
+                    <div class="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-700/60">
+                        <span>주요 어종: <strong>우럭, 삼치, 광어</strong></span>
+                        <span>추천물때: 만조 전후 2시간</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal for Adding Log -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all">
+            <div class="bg-slate-900 px-6 py-4 flex justify-between items-center text-white">
+                <h3 class="text-lg font-bold"><i class="fa-solid fa-fish mr-2 text-cyan-400"></i>새 조과 등록하기</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <form id="add-log-form" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">제목 / 조행 명</label>
+                    <input type="text" id="input-title" required placeholder="예: 안흥항 새벽 런커 농어 손맛!" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">어종</label>
+                        <select id="input-species" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                            <option value="농어">농어</option>
+                            <option value="광어">광어</option>
+                            <option value="우럭">우럭</option>
+                            <option value="쭈꾸미">쭈꾸미/갑오징어</option>
+                            <option value="기타">기타 어종</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">크기 (cm)</label>
+                        <input type="number" id="input-size" required placeholder="예: 65" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">출조 날짜</label>
+                        <input type="date" id="input-date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">포인트 장소</label>
+                        <input type="text" id="input-location" required placeholder="예: 태안 안흥항" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">사용 루어/채비</label>
+                    <input type="text" id="input-lure" placeholder="예: 플로팅 미노우 120mm" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">이미지 URL (선택사항)</label>
+                    <input type="url" id="input-image" placeholder="https://..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border border-slate-300 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition">취소</button>
+                    <button type="submit" class="px-5 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-xs font-semibold shadow-md transition">저장하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-semibold flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toast-message">새 조행기가 성공적으로 등록되었습니다.</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 py-10 mt-auto border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
+                    <i class="fa-solid fa-fish"></i>
+                </div>
+                <span class="text-sm font-semibold text-slate-200">SeaAngler Personal Log</span>
+            </div>
+            <p class="text-xs text-slate-500">&copy; 2026 SeaAngler. All rights reserved. 안전한 안작(安釣)하세요.</p>
+            <div class="flex space-x-4 text-slate-400">
+                <a href="#" class="hover:text-cyan-400 transition"><i class="fa-brands fa-youtube text-lg"></i></a>
+                <a href="#" class="hover:text-cyan-400 transition"><i class="fa-brands fa-instagram text-lg"></i></a>
+                <a href="#" class="hover:text-cyan-400 transition"><i class="fa-solid fa-blog text-lg"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Sample Fishing Log Data
+        let fishingLogs = [
+            {
+                id: 1,
+                title: "안흥항 갯바위 몬스터 농어 히트!",
+                species: "농어",
+                size: 84,
+                date: "2026-10-02",
+                location: "충남 태안 안흥항",
+                lure: "플로팅 미노우 125mm (Chart컬러)",
+                image: "https://images.unsplash.com/photo-1534043464124-3be32fe000c9?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 2,
+                title: "보령 다운샷 광어 7자 기록 갱신",
+                species: "광어",
+                size: 72,
+                date: "2026-09-18",
+                location: "충남 보령 외연도 인근",
+                lure: "워터멜론 4인치 쉐드웜 + 25호 봉돌",
+                image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 3,
+                title: "오천항 가을 갑오징어 쿨러 조과",
+                species: "쭈꾸미",
+                size: 25,
+                date: "2026-09-05",
+                location: "충남 보령 오천항",
+                lure: "수박색 레이저 에기 + 12호 봉돌",
+                image: "https://images.unsplash.com/photo-1516683018641-547af6c26820?auto=format&fit=crop&w=600&q=80"
+            }
+        ];
+
+        // Render Logs to UI
+        function renderLogs(logsToRender = fishingLogs) {
+            const container = document.getElementById('logs-container');
+            container.innerHTML = '';
+
+            if(logsToRender.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-400">
+                        <i class="fa-solid fa-fish-fins text-4xl mb-3 block"></i>
+                        해당하는 조행기 기록이 없습니다.
+                    </div>
+                `;
+                return;
+            }
+
+            logsToRender.forEach(log => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 hover:shadow-xl transition-all duration-300 flex flex-col';
+                card.innerHTML = `
+                    <div class="relative h-48 overflow-hidden bg-slate-100">
+                        <img src="${log.image}" alt="${log.title}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" onerror="this.src='https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=80'">
+                        <span class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-cyan-300 font-bold text-xs px-3 py-1 rounded-full border border-slate-700">
+                            ${log.species} ${log.size}cm
+                        </span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center text-xs text-slate-400 mb-2">
+                                <span><i class="fa-regular fa-calendar mr-1"></i>${log.date}</span>
+                                <span><i class="fa-solid fa-location-dot mr-1"></i>${log.location}</span>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-base mb-2 hover:text-cyan-600 transition cursor-pointer">${log.title}</h3>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 flex items-center justify-between">
+                            <span class="truncate max-w-[200px]"><i class="fa-solid fa-hook text-cyan-500 mr-1"></i>${log.lure}</span>
+                            <button onclick="deleteLog(${log.id})" class="text-rose-400 hover:text-rose-600 p-1 transition" title="삭제">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Filter Functionality
+        function filterLogs(category) {
+            // Update active state of buttons
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-slate-900', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-600');
+            });
+            event.target.classList.remove('bg-white', 'text-slate-600');
+            event.target.classList.add('bg-slate-900', 'text-white');
+
+            if(category === 'all') {
+                renderLogs(fishingLogs);
+            } else {
+                const filtered = fishingLogs.filter(log => log.species.includes(category));
+                renderLogs(filtered);
+            }
+        }
+
+        // Add Log Modal Functions
+        function openModal() {
+            document.getElementById('modal-backdrop').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-backdrop').classList.add('hidden');
+            document.getElementById('add-log-form').reset();
+        }
+
+        // Delete Log
+        function deleteLog(id) {
+            fishingLogs = fishingLogs.filter(log => log.id !== id);
+            renderLogs(fishingLogs);
+            showToast("조행기가 삭제되었습니다.");
+        }
+
+        // Handle New Log Submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('input-title').value;
+            const species = document.getElementById('input-species').value;
+            const size = document.getElementById('input-size').value;
+            const date = document.getElementById('input-date').value;
+            const location = document.getElementById('input-location').value;
+            const lure = document.getElementById('input-lure').value || '기본 채비';
+            let image = document.getElementById('input-image').value;
+
+            if(!image) {
+                image = 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=80';
+            }
+
+            const newLog = {
+                id: Date.now(),
+                title,
+                species,
+                size,
+                date,
+                location,
+                lure,
+                image
+            };
+
+            fishingLogs.unshift(newLog);
+            renderLogs(fishingLogs);
+            closeModal();
+            showToast("새 조행기가 추가되었습니다!");
+        }
+
+        // Toast Message Notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+
+        // Set default date input to today
+        document.getElementById('input-date').value = new Date().toISOString().substring(0, 10);
+
+        // Initial render
+        window.onload = function() {
+            renderLogs();
+        };
+    </script>
+</body>
+</html>
